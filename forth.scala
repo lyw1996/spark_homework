@@ -10,7 +10,6 @@ import scala.collection.mutable.ArrayBuffer
 import scala.io.Source
 //import scala.io.Codec
 
-
 object forth {
   def exchangeedge(x:(Edge[Int])): (Edge[Int])={
     val a = x.srcId
