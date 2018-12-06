@@ -9,7 +9,7 @@ from pyspark import SparkConf
 import os
 
 
-f1=open('F:\研一上\云计算\第三次小作业\\variables.txt','r')
+f1=open('F:\\研一上\\云计算\\第三次小作业\\variables.txt','r')
 #存文件内容
 array=f1.read().splitlines()
 streaming=array[3]
