@@ -7,8 +7,6 @@ import io
 import os
 import shutil
 
-if os.path.exists("F:\研一上\云计算\home\spark\streaming\\tmp")==False:
-	os.makedirs("F:\研一上\云计算\home\spark\streaming\\tmp")
 
 f1=open('F:\研一上\云计算\第三次小作业\\variables.txt','r')
 #存文件内容
@@ -19,7 +17,8 @@ COLLECTION=array[2]
 streaming=array[3]
 resultaddress=array[4]
 f1.close()
-
+if os.path.exists(streaming+"\\tmp")==False:
+	os.makedirs(streaming+"\\tmp")
 
 if __name__ == '__main__':
 	# mongo_url = "localhost:27017"

@@ -37,7 +37,7 @@ def updateFunction(newValues, runningCount):
 def checkShutdownMarker():
 	stopFlag = os.path.exists(streaming+'\stop-spark')
 	return stopFlag
-
+'''
 def savefile(x):
 
 	if str(x[0])!='None':
@@ -60,6 +60,7 @@ def savefile(x):
 #     ConnectionPool.returnConnection(connection)
 
 def sendPartition(iter):
+	print (type(iter))
 	f2=open(resultaddress + "mf1832107.txt", 'a+', encoding='utf-8')
 	for record in iter:
 		if record[0]!=None:
@@ -69,10 +70,22 @@ def sendPartition(iter):
 			f2.write(';')
 	f2.write('\n')
 	f2.close()
+'''
+def save(rdd):
+	rdd.foreach(lambda x:write(x))
+	f=open(resultaddress + "mf1832107.txt", 'a+', encoding='utf-8')
+	f.write('\n')
+	f.close()
 
-def savenull():
-	with open(resultaddress + "mf1832107.txt", 'a+', encoding='utf-8') as f:
-		f.write('\n')
+def write(record):
+	f2=open(resultaddress + "mf1832107.txt", 'a+', encoding='utf-8')
+	if record[0] != None:
+		f2.write(str(record[0]))
+		f2.write('_')
+		f2.write(str(record[1]))
+		f2.write(';')
+	f2.close()
+
 
 
 if __name__ == "__main__":
@@ -84,7 +97,8 @@ if __name__ == "__main__":
 	words = lines.map(lambda x: (filter(x), 1))
 	wordCounts = words.reduceByKey(add)
 	wordCounts.pprint()
-	wordCounts.foreachRDD(lambda rdd: rdd.foreachPartition(sendPartition))
+	wordCounts.foreachRDD(lambda rdd:save(rdd))
+	# wordCounts.foreachRDD(lambda rdd: rdd.foreachPartition(sendPartition))
 	# wordSave=wordCounts.map(lambda x:savefile(x))
 	# wordSave.pprint()
 	# savenull()
@@ -92,7 +106,8 @@ if __name__ == "__main__":
 	# 	f.write('\n')
 	runningCounts = words.updateStateByKey(updateFunction)
 	runningCounts.pprint()
-	runningCounts.foreachRDD(lambda rdd:rdd.foreachPartition(sendPartition))
+	runningCounts.foreachRDD(lambda rdd:save(rdd))
+	# runningCounts.foreachRDD(lambda rdd:rdd.foreachPartition(sendPartition))
 	# runningSave=runningCounts.map(lambda x:savefile(x))
 	# runningSave.pprint()
 	# savenull()
@@ -110,12 +125,11 @@ if __name__ == "__main__":
     # ssc.awaitTermination()
 
 
-
+	#
 	checkIntervalMillis = 10
 	isStopped = False
 	while (isStopped == False):
 		print("calling awaitTerminationOrTimeout")
-
 		isStopped = ssc.awaitTerminationOrTimeout(checkIntervalMillis)
 		if isStopped == True:
 			print("confirmed! The streaming context is stopped. Exiting application...")
