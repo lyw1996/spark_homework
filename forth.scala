@@ -11,8 +11,7 @@ import scala.io.Source
 //import scala.io.Codec
 
 
-
-object mf1832107 {
+object forth {
   def exchangeedge(x:(Edge[Int])): (Edge[Int])={
     val a = x.srcId
     x.srcId = x.dstId
